@@ -1,0 +1,617 @@
+#:import utils kivy.utils
+
+ScreenManager:
+    id: screen_manager
+    MainPage:
+        name: "main"
+    BudgetManager:
+        name: "budget"
+    Inventory:
+        name: "inventory"
+    Grocery:
+        name: "grocery"
+    Meals:
+        name: "meals"
+
+# Main Page
+<MainPage>:
+    # MainGrid
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#F5EFE7')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        # AppNameGrid
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            padding: dp(10)
+
+            Label:
+                text: "ForkNFund"
+                font_size: self.width / 5
+                color: utils.get_color_from_hex('#000000')
+
+            Button:
+                text: 'Refresh'
+                background_color: utils.get_color_from_hex('#D8C4B6')
+                on_press: root.update_labels()
+
+
+        # BudgetGrid
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            padding: dp(10)
+
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#3E5879')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Current Budget:"
+                font_size: self.width / 7
+
+            Label:
+                id: current_budget
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#3E5879')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: ""
+                font_size: self.width / 7
+
+        # OutOfStockGrid
+        GridLayout:
+            cols: 2
+            spacing: dp(10)
+            padding: dp(10)
+
+            Label:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#3E5879')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                text: "Out of Stock:"
+                font_size: self.width / 7
+
+            ScrollView:
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#3E5879')
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+                size_hint: (1, 1)
+                bar_width: 10
+                GridLayout:
+                    id: items_grid
+                    cols: 1
+                    size_hint_y: None
+                    height: self.minimum_height
+                    row_default_height: 40
+                    row_force_default: True
+
+        # PageDirectoryGrid
+        GridLayout:
+            cols: 5
+            spacing: dp(10)
+            padding: dp(10)
+
+            Button:
+                text: "Budget \nTracker"
+                font_size: self.height / 4
+                font_size: self.width / 4
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.budget()
+
+            Button:
+                text: "Inventory"
+                font_size: self.height / 4
+                font_size: self.width / 5
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: app.root.current = "inventory"
+
+            Button:
+                text: "Grocery"
+                font_size: self.height / 4
+                font_size: self.width / 5
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: app.root.current = "grocery"
+
+            Button:
+                text: "Meals"
+                font_size: self.height / 4
+                font_size: self.width / 3
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: app.root.current = "meals"
+
+# Budget Tracker Page
+<BudgetManager>:
+    GridLayout:
+        cols: 1
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#3E5879')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        GridLayout:
+            cols: 2
+            height: self.minimum_height
+
+            Label:
+                text: "Budget Manager"
+                size_hint_y: None
+                height: 125
+                color: utils.get_color_from_hex('#000000')
+                font_size: self.height / 4
+                font_size: self.width / 10
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#F5EFE7')
+                    Rectangle:
+                        size: root.size
+                        pos: self.pos
+            Button:
+                text: 'Reset'
+                background_color: utils.get_color_from_hex('#D8C4B6')
+                on_press: root.reset_values()
+
+        GridLayout:
+            cols: 2
+
+            Label:
+                text: "Weekly Budget: "
+                font_size: self.height / 5
+                font_size: self.width / 10
+
+            Label:
+                id: text_budget
+                text: ""
+                font_size: self.height / 5
+                font_size: self.width / 10
+
+        GridLayout:
+            cols: 2
+
+            Label:
+                text: "Total Spent: "
+                font_size: self.height / 5
+                font_size: self.width / 10
+
+            Label:
+                id: text_spent
+                text: ""
+                font_size: self.height / 5
+                font_size: self.width / 10
+
+        GridLayout:
+            cols: 2
+
+            TextInput:
+                id: set_budget
+                multiline: False
+
+            TextInput:
+                id: subtract_budget
+                multiline: False
+
+        GridLayout:
+            cols: 2
+
+            Button:
+                text: "Set Budget"
+                font_size: self.height / 5
+                font_size: self.width / 10
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.set_budget()
+
+            Button:
+                text: "Subtract Budget"
+                font_size: self.height / 5
+                font_size: self.width / 10
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.subtract_budget()
+
+        GridLayout:
+            cols: 1
+
+            Button:
+                text: "Back to Main Page"
+                font_size: self.height / 4
+                font_size: self.width / 10
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: app.root.current = "main"
+
+# Inventory Page
+<Inventory>:
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#3E5879')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        GridLayout:
+            cols: 3
+
+            Label:
+                text: "Inventory Manager"
+                size_hint_y: None
+                height: 125
+                font_size: self.height / 4
+                font_size: self.width / 10
+                color: utils.get_color_from_hex('#000000')
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#F5EFE7')
+                    Rectangle:
+                        size: root.size
+                        pos: self.pos
+
+            Button:
+                text: "Refresh"
+                background_color: utils.get_color_from_hex('#D8C4B6')
+                on_press: root.get_inventory()
+
+            Button:
+                text: 'Reset'
+                background_color: utils.get_color_from_hex('#D8C4B6')
+                on_press: root.clear_inventory()
+
+        GridLayout:
+            cols: 1
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex('#213555')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: "Inventory"
+                font_size: self.height / 4
+                font_size: self.width / 10
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                cols:1
+
+                GridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    padding: dp(10)
+
+                    ScrollView:
+                        size_hint: (1, 1)
+                        bar_width: 10
+                        GridLayout:
+                            id: items_grid
+                            cols: 2
+                            size_hint_y: None
+                            height: self.minimum_height
+                            row_default_height: 40
+                            row_force_default: True
+
+
+        GridLayout:
+            cols: 2
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex('#213555')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                text: "Item Name"
+                font_size: self.height / 4
+                font_size: self.width / 10
+            TextInput:
+                id: item
+                multiline: False
+            Label:
+                text: "Quantity"
+                font_size: self.height / 4
+                font_size: self.width / 10
+            TextInput:
+                id: quantity
+                multiline: False
+
+        GridLayout:
+            cols: 3
+            Button:
+                text: "Submit"
+                font_size: self.height / 4
+                font_size: self.width / 6
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.add_item()
+
+            Button:
+                text: "Edit"
+                font_size: self.height / 4
+                font_size: self.width / 6
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.update_item()
+
+            Button:
+                text: "Delete"
+                font_size: self.height / 4
+                font_size: self.width / 6
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.delete_item()
+
+        GridLayout:
+            cols: 1
+            Button:
+                text: "Back to Main Page"
+                font_size: self.height / 4
+                font_size: self.width / 10
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: app.root.current = "main"
+
+
+# Grocery Page
+<Grocery>:
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#3E5879')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        GridLayout:
+            cols: 3
+
+            Label:
+                text: "Grocery"
+                size_hint_y: None
+                height: 125
+                color: utils.get_color_from_hex('#000000')
+                font_size: self.height / 4
+                font_size: self.width / 10
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#F5EFE7')
+                    Rectangle:
+                        size: root.size
+                        pos: self.pos
+
+            Button:
+                text: "Refresh"
+                background_color: utils.get_color_from_hex('#D8C4B6')
+                on_press: root.get_cart()
+
+            Button:
+                text: 'Reset'
+                background_color: utils.get_color_from_hex('#D8C4B6')
+                on_press: root.clear_cart()
+
+        GridLayout:
+            cols: 1
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex('#213555')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            Label:
+                text: "Grocery"
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                cols:1
+
+                GridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    padding: dp(10)
+
+                    ScrollView:
+                        size_hint: (1, 1)
+                        bar_width: 10
+                        GridLayout:
+                            id: items_grid
+                            cols: 3
+                            size_hint_y: None
+                            height: self.minimum_height
+                            row_default_height: 40
+                            row_force_default: True
+
+
+        GridLayout:
+            cols: 2
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex('#213555')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                text: "Item Name"
+            TextInput:
+                id: cart
+                multiline: False
+            Label:
+                text: "Quantity"
+            TextInput:
+                id: quantity
+                multiline: False
+            Label:
+                text: "Price(PHP)"
+            TextInput:
+                id: price
+                multiline: False
+
+        GridLayout:
+            cols: 4
+            Button:
+                text: "Add to Cart"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.add_to_cart()
+
+            Button:
+                text: "Edit"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.update_cart()
+
+            Button:
+                text: "Delete"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.delete_from_cart()
+            Button:
+                text: "Checkout"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.checkout()
+
+        GridLayout:
+            cols: 1
+            Button:
+                text: "Back to Main Page"
+                font_size: self.height / 4
+                font_size: self.width / 10
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: app.root.current = "main"
+                spacing: dp(10)
+                padding: dp(20)
+
+# Meals Page
+<Meals>:
+    GridLayout:
+        cols: 1
+        size: root.width, root.height
+        canvas.before:
+            Color:
+                rgba: utils.get_color_from_hex('#3E5879')
+            Rectangle:
+                size: self.size
+                pos: self.pos
+
+        GridLayout:
+            cols: 3
+
+            Label:
+                text: "Meals"
+                size_hint_y: None
+                height: 125
+                font_size: self.height / 4
+                font_size: self.width / 10
+                color: utils.get_color_from_hex('#000000')
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#F5EFE7')
+                    Rectangle:
+                        size: root.size
+                        pos: self.pos
+
+            Button:
+                text: 'Reset'
+                background_color: utils.get_color_from_hex('#D8C4B6')
+                on_press: root.clear_recipes()
+
+        GridLayout:
+            cols: 2
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex('#1d522b')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            TextInput:
+                id: meal_search
+                multiline: False
+            Button:
+                id: button_search
+                text: "Search"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.get_ingredients()
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+            GridLayout:
+                cols:1
+
+                GridLayout:
+                    cols: 2
+                    spacing: dp(10)
+                    padding: dp(10)
+
+                    ScrollView:
+                        size_hint: (1, 1)
+                        bar_width: 10
+                        GridLayout:
+                            id: ingredients_grid
+                            cols: 1
+                            size_hint_y: None
+                            height: self.minimum_height
+                            row_default_height: 40
+                            row_force_default: True
+
+
+        GridLayout:
+            cols: 2
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex('#213555')
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+            Label:
+                text: "Recipe Name"
+            TextInput:
+                id: recipe_name
+                multiline: False
+            Label:
+                text: "Ingredients"
+            TextInput:
+                id: ingredients
+                multiline: False
+
+        GridLayout:
+            cols: 4
+            Button:
+                text: "Add Recipe"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.add_to_recipes()
+
+            Button:
+                text: "Edit Recipe"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.update_recipe()
+
+            Button:
+                text: "Delete Recipe"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: root.delete_recipe()
+
+        GridLayout:
+            cols: 1
+            Button:
+                text: "Back to Main Page"
+                background_color: utils.get_color_from_hex('#213555')
+                on_press: app.root.current = "main"
+                spacing: dp(10)
+                padding: dp(20)
